@@ -3,6 +3,8 @@ import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap
 
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
+import { QUERY_USER } from '../utils/queries';
+import { useQuery } from '@apollo/client'
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
@@ -19,7 +21,7 @@ const SavedBooks = () => {
           return false;
         }
 
-        const response = await getMe(token);
+        const response = await useQuery(QUERY_USER);
 
         if (!response.ok) {
           throw new Error('something went wrong!');

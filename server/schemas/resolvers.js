@@ -6,7 +6,7 @@ const { AuthenticationError } = require('apollo-server-express')
 const resolvers = {
     //get single user//
     Query: {
-        User: async (parent, { _id, email }) => {
+        user: async (parent, { _id, email }) => {
             const foundUser = await User.findOne({
                 $or: [{ _id: user ? user._id : _id }, { username: username }],
             });
@@ -24,7 +24,7 @@ const resolvers = {
             return { Token, User };
         },
 
-        login: (parent, email, password) => {
+        login: async (parent, email, password) => {
             //email check
             const User = await User.findOne(
                 { email }
@@ -42,7 +42,7 @@ const resolvers = {
             return { Token, User };
         },
 
-        saveBook: (parent, bookData, context) => {
+        saveBook: async (parent, bookData, context) => {
             if (context.user) {
                 const Bookworm = await User.findByIdAndUpdate({ _id: context.user._id }, { $push: { savedBooks: bookData } }, { new: true });
                 return Bookworm;
@@ -50,7 +50,7 @@ const resolvers = {
             throw new AuthenticationError("Oi! This is not here");
         },
 
-        removeBook: (parent, bookId, context) => {
+        removeBook: async (parent, bookId, context) => {
             if (context.user) {
                 const Bookworm = await User.findByIdAndUpdate({ _id: context.user._id }, { $pull: { savedBooks: bookId } }, { new: true });
                 return Bookworm;
